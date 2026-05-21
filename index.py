@@ -67,31 +67,30 @@ if escolha == "1":
 
     heroi["nome"] = "Deku"
     heroi["quirk"] = "One For All"
-    heroi["dano"] = 55
+    heroi["dano"] = 21
 
 elif escolha == "2":
 
     heroi["nome"] = "Bakugou"
     heroi["quirk"] = "Explosão"
-    heroi["dano"] = 50
+    heroi["dano"] = 20
 
 elif escolha == "3":
 
     heroi["nome"] = "Todoroki"
     heroi["quirk"] = "Gelo e Fogo"
-    heroi["dano"] = 55
-
+    heroi["dano"] = 25
 elif escolha == "4":
 
     heroi["nome"] = "Dabi"
     heroi["quirk"] = "cremation"
-    heroi["dano"] = 50
+    heroi["dano"] = 33
 
 elif escolha == "5":
 
     heroi["nome"] = "Tsukuyomi"
     heroi["quirk"] = "Dark Shadow"
-    heroi["dano"] = 45
+    heroi["dano"] = 29
 
 elif escolha == "6":
 
@@ -220,7 +219,7 @@ def batalha(nome, vida, dano):
 
             chance = random.randint(1, 100)
 
-            if chance <= 60:
+            if chance <= 55:
 
                 ataque = random.randint(15, 25) + heroi["dano"]
 
@@ -316,6 +315,20 @@ if missao1 == "1":
     "\nVocê salvou dezenas de pessoas!"
     )
 
+    # texto lentinho
+    def slow(txt, vel=0.0311):
+        for letra in txt:
+            print(letra, end="", flush=True)
+            time.sleep(vel)
+        print()
+
+    slow(f"civis: Obrigado por nos salvar, {heroi['nome']}!")
+    slow("civis:Você apareceu quando todos estavam com medo...")
+    slow("civis:Agora sabemos que ainda existem verdadeiros heróis!")
+    slow(f"{heroi['nome']}: Fico feliz por vocês estarem bem.")
+    slow(f"{heroi['nome']}: Enquanto eu estiver aqui, ninguém vai machucar vocês.")
+    slow(f"{heroi['nome']}: Um herói sempre protege quem precisa!")
+
     heroi["dinheiro"] += 100
 
     ganhar_xp(50)
@@ -363,25 +376,96 @@ missao2 = input("\nEscolha: ")
 
 if missao2 == "1":
 
+    escrever()
+
+    slow(f"uraraka: muito obrigado {heroi['nome']}, estou te devendo um favor!")
+
     escrever(
-    "\nuraraka ficou te devendo um favor."
+    "\nUraraka ficou te devendo um favor."
     )
 
     heroi["dano"] += 5
+    ajuda_uraraka = True
 
 else:
 
     escrever(
-    "\nVocê ignorou uraraka."
+    "\nVocê ignorou Uraraka."
     )
+
+    ajuda_uraraka = False
+
 
 # =========================================================
 # SEGUNDA BATALHA
 # =========================================================
 
-batalha("Nomu", 120, 25)
+slow("\nUm Nomu apareceu!")
+
+vida_nomu = 120
+
+# Uraraka ajuda antes da luta
+if ajuda_uraraka:
+
+    slow("\nUraraka entrou na batalha para te ajudar!")
+
+    dano_uraraka = 20
+
+    vida_nomu -= dano_uraraka
+
+    slow(f"Uraraka usou sua individualidade e causou {dano_uraraka} de dano!")
+
+    slow(f"O Nomu ficou com {vida_nomu} de vida!")
+
+# batalha principal
+batalha("Nomu", vida_nomu, 25)
 
 ganhar_xp(100)
+
+# =========================================================
+# TERCEIRA MISSÃO
+# =========================================================
+
+escrever("\n====================================")
+escrever("MISSÃO EXTRA - ATAQUE NOTURNO")
+escrever("====================================")
+
+escrever(
+"Durante a noite, um vilão destrói lojas no centro da cidade."
+)
+
+escrever(
+f"{heroi['nome']} corre para impedir o ataque."
+)
+
+escrever(
+"Os civis estão fugindo desesperados..."
+)
+
+slow("civil: Por favor herói, pare ele!")
+slow(f"{heroi['nome']}: Eu não vou deixar ninguém se ferir!")
+
+# =========================================================
+# NOVA BATALHA
+# =========================================================
+
+batalha("Stain", 90, 20)
+
+# =========================================================
+# RECOMPENSAS
+# =========================================================
+
+escrever(
+"\nStain foi derrotado e os civis foram salvos!"
+)
+
+heroi["dinheiro"] += 150
+
+ganhar_xp(70)
+
+escrever(
+f"\n{heroi['nome']} recebeu 150 moedas!"
+)
 
 # =========================================================
 # FINAL
