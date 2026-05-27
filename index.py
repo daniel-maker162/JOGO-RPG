@@ -14,6 +14,28 @@
 
 import random
 import time
+import sys
+
+# 👇 função de barra de vida
+
+def barra_vida(atual, maximo):
+
+    barras = int((atual / maximo) * 10)
+
+    barra = "█" * barras + "░" * (10 - barras)
+
+    return f"{barra} {atual}/{maximo} HP"
+
+
+#  slow, função para de dialogos
+
+def slow(txt, vel=0.03):
+
+    for letra in txt:
+        print(letra, end="", flush=True)
+        time.sleep(vel)
+
+    print()
 
 # =========================================================
 # FUNÇÃO DE TEXTO DEVAGAR
@@ -35,6 +57,7 @@ heroi = {
     "nome": "",
     "quirk": "",
     "vida": 100,
+    "vida_max": 100,
     "dano": 0,
     "xp": 0,
     "nivel": 1,
@@ -98,8 +121,16 @@ elif escolha == "6":
 
     heroi["quirk"] = input("Nome da individualidade: ")
 
-    heroi["dano"] = int(input("Dano inicial: "))
+    while True:
 
+        dano = int(input("Dano inicial (5-33): "))
+
+        if 5 <= dano <= 30:
+            break
+
+        print("Escolha um valor entre 5 e 33.")
+
+    heroi["dano"] = dano
 else:
     escrever("Escolha inválida.")
     exit()
@@ -162,11 +193,11 @@ def ganhar_xp(valor):
 
     escrever(f"\nVocê ganhou {valor} XP!")
 
-    if heroi["xp"] >= 100:
+    while heroi["xp"] >= 100:
 
+        heroi["xp"] -= 100
         heroi["nivel"] += 1
-        heroi["xp"] = 0
-        heroi["vida"] = 100
+        heroi["vida"] = heroi["vida_max"]
         heroi["dano"] += 5
 
         escrever("\n====================================")
@@ -180,7 +211,7 @@ def ganhar_xp(valor):
 # SISTEMA DE BATALHA
 # =========================================================
 
-def batalha(nome, vida, dano):
+def batalha(nome, vida, vida_max, dano):
 
     escrever("\n====================================")
     escrever(f"BATALHA CONTRA {nome.upper()}!")
@@ -188,9 +219,8 @@ def batalha(nome, vida, dano):
 
     while vida > 0 and heroi["vida"] > 0:
 
-        escrever(f"\nSua vida: {heroi['vida']}")
-        escrever(f"Vida do inimigo: {vida}")
-
+        escrever(barra_vida(heroi["vida"], 100))
+        escrever(barra_vida(vida, vida_max))
         escrever("\n1 - Ataque Fraco")
         escrever("2 - Ataque Forte")
         escrever("3 - Curar")
@@ -315,13 +345,8 @@ if missao1 == "1":
     "\nVocê salvou dezenas de pessoas!"
     )
 
-    # texto lentinho
-    def slow(txt, vel=0.0311):
-        for letra in txt:
-            print(letra, end="", flush=True)
-            time.sleep(vel)
-        print()
-
+    # diálogo feito pela função slow
+   
     slow(f"civis: Obrigado por nos salvar, {heroi['nome']}!")
     slow("civis:Você apareceu quando todos estavam com medo...")
     slow("civis:Agora sabemos que ainda existem verdadeiros heróis!")
@@ -349,7 +374,7 @@ else:
 # PRIMEIRA BATALHA
 # =========================================================
 
-batalha("Vilão de Lama", 60, 15)
+batalha("Vilão de Lama", 60, 60, 15)
 
 ganhar_xp(50)
 
@@ -376,10 +401,8 @@ missao2 = input("\nEscolha: ")
 
 if missao2 == "1":
 
-    escrever()
-
     slow(f"uraraka: muito obrigado {heroi['nome']}, estou te devendo um favor!")
-
+    
     escrever(
     "\nUraraka ficou te devendo um favor."
     )
@@ -413,12 +436,12 @@ if ajuda_uraraka:
 
     vida_nomu -= dano_uraraka
 
-    slow(f"Uraraka usou sua individualidade e causou {dano_uraraka} de dano!")
+    slow(f"Uraraka causou {dano_uraraka} de dano!")
 
-    slow(f"O Nomu ficou com {vida_nomu} de vida!")
+    slow(barra_vida(vida_nomu, 120))
 
 # batalha principal
-batalha("Nomu", vida_nomu, 25)
+batalha("Nomu", vida_nomu, 120, 25)
 
 ganhar_xp(100)
 
@@ -449,7 +472,7 @@ slow(f"{heroi['nome']}: Eu não vou deixar ninguém se ferir!")
 # NOVA BATALHA
 # =========================================================
 
-batalha("Stain", 90, 20)
+batalha("Stain", 90, 90, 20)
 
 # =========================================================
 # RECOMPENSAS
@@ -464,7 +487,7 @@ heroi["dinheiro"] += 150
 ganhar_xp(70)
 
 escrever(
-f"\n{heroi['nome']} recebeu 150 moedas!"
+f"\n você recebeu 150 moedas!"
 )
 
 # =========================================================
@@ -475,7 +498,7 @@ escrever("\n====================================")
 escrever("FINAL")
 escrever("====================================")
 
-if heroi["nivel"] >= 2:
+if heroi["nivel"] >= 3:
 
     escrever(
     f"\n{heroi['nome']} se tornou "
